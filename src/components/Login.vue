@@ -8,12 +8,12 @@
       <el-form class="login-form">
         <!---用户名-->
         <el-form-item>
-          <el-input></el-input>
+          <el-input prefix-icon="iconfont icon-user"></el-input>
         </el-form-item>
 
         <!--密码-->
         <el-form-item>
-          <el-input></el-input>
+          <el-input prefix-icon="iconfont icon-3702mima"></el-input>
         </el-form-item>
 
         <el-form-item class="btns">
