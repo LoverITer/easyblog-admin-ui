@@ -12,7 +12,11 @@
       <!--侧边栏-->
       <el-aside :width="menuCollapseFlag ? '64px':'200px'">
         <div class="toggle-button" @click="toggleMenu">|||</div>
-        <el-menu unique-opened :collapse-transition="false" :collapse="menuCollapseFlag" background-color="#333744"
+        <el-menu :router="true"
+                 :collapse-transition="false"
+                 :collapse="menuCollapseFlag"
+                 unique-opened
+                 background-color="#333744"
                  text-color="#fff"
                  active-text-color="#409eff">
           <!--一级菜单-->
@@ -23,7 +27,7 @@
               <span>{{ item.authName }}</span>
             </template>
             <!--二级菜单-->
-            <el-menu-item :index="subItem.id+''" v-for="subItem in item.children" :key="subItem.id">
+            <el-menu-item :index="'/'+subItem.path" v-for="subItem in item.children" :key="subItem.id">
               <!--二级菜单模板-->
               <template slot="title">
                 <i class="el-icon-menu"></i>
@@ -35,7 +39,9 @@
       </el-aside>
       <el-container>
         <!--主体-->
-        <el-main>Main</el-main>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
         <!--footer-->
         <el-footer>Footer</el-footer>
       </el-container>
