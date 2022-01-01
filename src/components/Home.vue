@@ -1,7 +1,11 @@
 <template>
   <el-container class="home-container">
     <!--头部区域-->
-    <el-header>Header
+    <el-header>
+      <div>
+        <img src="../assets/logo.png">
+        <span>Vue 电商后台管理系统</span>
+      </div>
       <el-button plain type="info" @click="logout">退出</el-button>
     </el-header>
     <el-container>
@@ -31,19 +35,39 @@ export default {
 </script>
 
 <style scoped>
-.home-container{
+.home-container {
   height: 100%;
 }
 
 .el-header {
   background-color: #373d41;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0;
+  align-items: center;
+  color: #fff;
+  font-size: 20px;
+}
+.el-header img{
+  width: 50px;
+  height: 50px;
+}
+
+.el-header div{
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.el-header div span{
+  margin-left: 15px;
 }
 
 .el-aside {
   background-color: #333744;
 }
 
-.el-main{
+.el-main {
   background-color: #eaedf1;
 }
 
