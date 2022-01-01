@@ -10,8 +10,11 @@
     </el-header>
     <el-container>
       <!--侧边栏-->
-      <el-aside width="200px">
-        <el-menu unique-opened background-color="#333744" text-color="#fff" active-text-color="#409eff">
+      <el-aside :width="menuCollapseFlag ? '64px':'200px'">
+        <div class="toggle-button" @click="toggleMenu">|||</div>
+        <el-menu unique-opened :collapse-transition="false" :collapse="menuCollapseFlag" background-color="#333744"
+                 text-color="#fff"
+                 active-text-color="#409eff">
           <!--一级菜单-->
           <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
             <!--一级菜单模板区-->
@@ -52,7 +55,10 @@ export default {
         '101': 'iconfont icon-shangpin',
         '102': 'iconfont icon-danju',
         '145': 'iconfont icon-baobiao',
-      }
+      },
+      //控制侧边菜单的收起和显示，默认显示
+      menuCollapseFlag: false,
+
     }
   },
   methods: {
@@ -73,6 +79,10 @@ export default {
         }
         this.menuList = resp.data
       })
+    },
+    // 点击按钮实现菜单的收起与显示
+    toggleMenu: function () {
+      this.menuCollapseFlag = !this.menuCollapseFlag
     }
   },
   created: function () {
@@ -115,7 +125,7 @@ export default {
   background-color: #333744;
 }
 
-.el-aside .el-menu{
+.el-aside .el-menu {
   border-right: none;
 }
 
@@ -129,5 +139,15 @@ export default {
 
 .iconfont {
   margin-right: 5px;
+}
+
+.toggle-button {
+  background-color: #4a5064;
+  font-size: 10px;
+  line-height: 24px;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.2em;
+  cursor: pointer;
 }
 </style>
