@@ -30,8 +30,8 @@ export default {
   data () {
     return {
       loginForm: {
-        username: '533',
-        password: '353'
+        username: 'admin',
+        password: '123456'
       },
       // 表单校验
       loginFormRules: {
@@ -75,6 +75,10 @@ export default {
               return this.$message.error('用户名或密码不匹配')
             }
             this.$message.success('登录成功')
+            // 登录成功后将服务器返回的token 使用 sessionStorage 保存到用户本地
+            window.sessionStorage.setItem('LOGIN_TOKEN', response.data.data.token)
+            // 通过编程式导航跳转到后台主页，路由地址是 /home
+            this.$router.push('/home')
           })
         }
       })
