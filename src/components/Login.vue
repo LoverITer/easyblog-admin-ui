@@ -5,19 +5,19 @@
         <img src="../assets/logo.png">
       </div>
       <!--登录表单-->
-      <el-form class="login-form">
+      <el-form ref="loginRef" v-bind:model="loginForm" :rules="loginFormRules" class="login-form">
         <!---用户名-->
-        <el-form-item>
-          <el-input prefix-icon="iconfont icon-user"></el-input>
+        <el-form-item prop="=username">
+          <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
         </el-form-item>
 
         <!--密码-->
-        <el-form-item>
-          <el-input prefix-icon="iconfont icon-3702mima"></el-input>
+        <el-form-item prop="password">
+          <el-input v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" type="password"></el-input>
         </el-form-item>
 
         <el-form-item class="btns">
-          <el-button type="primary">登录</el-button>
+          <el-button type="primary" @click="login">登录</el-button>
           <el-button type="info">注册</el-button>
         </el-form-item>
       </el-form>
@@ -26,7 +26,61 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      loginForm: {
+        username: '533',
+        password: '353'
+      },
+      // 表单校验
+      loginFormRules: {
+        username: [
+          {
+            required: true,
+            message: '请输入用户名',
+            trigger: 'blur'
+          }
+        ],
+        password: [
+          {
+            required: true,
+            message: '请输入密码',
+            trigger: 'blur'
+          },
+          {
+            min: 6,
+            max: 16,
+            message: '密码长度在6~16位',
+            trigger: 'blur'
+          }
+        ]
+      }
+    }
+  },
+  methods: {
+    // 重置表单
+    resetLoginForm: function () {
+      this.$refs.loginRef.resetFields()
+    },
+    login: function () {
+      // valid接受一个回调函数 表示校验结果
+      this.$refs.loginRef.validate(valid => {
+        // 表单预验证
+        if (valid) {
+          // 如果验证通过,向服务器发送请求
+          console.log('表单验证通过,发起请求进行登录')
+          this.$http.post('login', this.loginForm).then(response => {
+            if (response.data.meta.status !== 200) {
+              return this.$message.error('用户名或密码不匹配')
+            }
+            this.$message.success('登录成功')
+          })
+        }
+      })
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -71,7 +125,7 @@ export default {}
   justify-content: flex-end;
 }
 
-.login-form{
+.login-form {
   position: absolute;
   bottom: 0;
   width: 100%;
