@@ -5,5 +5,5 @@ Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
-// 挂载 element-ui 的message 组件到 vue 实例
+//挂载 element-ui 的message 组件到 vue 实例
 Vue.prototype.$message = Message
