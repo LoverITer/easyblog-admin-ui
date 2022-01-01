@@ -11,7 +11,7 @@
     <el-container>
       <!--侧边栏-->
       <el-aside width="200px">
-        <el-menu background-color="#333744" text-color="#fff" active-text-color="#409eff">
+        <el-menu unique-opened background-color="#333744" text-color="#fff" active-text-color="#409eff">
           <!--一级菜单-->
           <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
             <!--一级菜单模板区-->
@@ -115,6 +115,10 @@ export default {
   background-color: #333744;
 }
 
+.el-aside .el-menu{
+  border-right: none;
+}
+
 .el-main {
   background-color: #eaedf1;
 }
@@ -123,7 +127,7 @@ export default {
   padding-left: 80px !important;
 }
 
-.iconfont{
+.iconfont {
   margin-right: 5px;
 }
 </style>
