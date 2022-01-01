@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login'
 import Home from '../components/Home'
+import Register from '../components/Register'
 
 Vue.use(VueRouter)
 
@@ -18,6 +19,10 @@ const router = new VueRouter({
     {
       path: '/home',
       component: Home
+    },
+    {
+      path: '/register',
+      component: Register
     }
   ]
 })
@@ -27,7 +32,7 @@ router.beforeEach((to, from, next) => {
   // to 将要访问那个页面
   // from 从那个页面跳转来
   // next 一个函数 调用它可以放行
-  if (to.path === '/login') return next()
+  if (to.path === '/login' || to.path === '/register') return next()
   const token = window.sessionStorage.getItem('LOGIN_TOKEN')
   if (!token) {
     // token 不存在，用户没有访问权限
