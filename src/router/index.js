@@ -6,7 +6,7 @@ import Register from '../components/Register'
 import Welcome from '../components/Welcome'
 import User from '../components/user/User'
 import Footer from '../components/footer/Footer'
-
+import Rights from '../components/power/Rights'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -39,6 +39,13 @@ const router = new VueRouter({
           path: '/users',
           components: {
             'default': User,
+            'Footer': Footer
+          }
+        },
+        {
+          path: '/rights',
+          components: {
+            'default': Rights,
             'Footer': Footer
           }
         }
