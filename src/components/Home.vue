@@ -15,6 +15,7 @@
         <el-menu :router="true"
                  :collapse-transition="false"
                  :collapse="menuCollapseFlag"
+                 :default-active="activePath"
                  unique-opened
                  background-color="#333744"
                  text-color="#fff"
@@ -27,7 +28,10 @@
               <span>{{ item.authName }}</span>
             </template>
             <!--二级菜单-->
-            <el-menu-item :index="'/'+subItem.path" v-for="subItem in item.children" :key="subItem.id">
+            <el-menu-item :index="'/'+subItem.path"
+                          v-for="subItem in item.children"
+                          :key="subItem.id"
+                          @click="saveNavStatus('/'+subItem.path)">
               <!--二级菜单模板-->
               <template slot="title">
                 <i class="el-icon-menu"></i>
@@ -43,7 +47,9 @@
           <router-view></router-view>
         </el-main>
         <!--footer-->
-        <el-footer>Footer</el-footer>
+        <el-footer>
+          <router-view name="Footer"></router-view>
+        </el-footer>
       </el-container>
     </el-container>
   </el-container>
@@ -64,7 +70,8 @@ export default {
       },
       //控制侧边菜单的收起和显示，默认显示
       menuCollapseFlag: false,
-
+      // 被激活的菜单地址
+      activePath: ''
     }
   },
   methods: {
@@ -74,9 +81,7 @@ export default {
       // 重定向到登录页
       this.$router.push('/login')
     },
-    /**
-     * 获取菜单列表
-     */
+    // 获取菜单列表
     getMenuList: function () {
       this.$http.get('menus').then(response => {
         const resp = response.data
@@ -89,10 +94,16 @@ export default {
     // 点击按钮实现菜单的收起与显示
     toggleMenu: function () {
       this.menuCollapseFlag = !this.menuCollapseFlag
+    },
+    //保存侧边侧边菜单的激活状态
+    saveNavStatus: function (activePath) {
+      window.sessionStorage.setItem('HOME_ACTIVE_PATH', activePath)
+      this.activePath = activePath
     }
   },
   created: function () {
     this.getMenuList()
+    this.activePath = window.sessionStorage.getItem('HOME_ACTIVE_PATH')
   }
 }
 </script>
@@ -141,6 +152,10 @@ export default {
 
 .el-menu-item {
   padding-left: 80px !important;
+}
+
+.el-footer {
+  background-color: #eaedf1 !important;
 }
 
 .iconfont {

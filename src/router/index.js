@@ -4,6 +4,8 @@ import Login from '../components/Login'
 import Home from '../components/Home'
 import Register from '../components/Register'
 import Welcome from '../components/Welcome'
+import User from '../components/user/User'
+import Footer from '../components/footer/Footer'
 
 Vue.use(VueRouter)
 
@@ -18,16 +20,29 @@ const router = new VueRouter({
       component: Login
     },
     {
+      path: '/register',
+      component: Register
+    },
+    {
       path: '/home',
       component: Home,
       redirect: '/welcome',
-      children:[
-        { path: '/welcome',component: Welcome }
+      children: [
+        {
+          path: '/welcome',
+          components: {
+            'default': Welcome,
+            'Footer': Footer
+          }
+        },
+        {
+          path: '/users',
+          components: {
+            'default': User,
+            'Footer': Footer
+          }
+        }
       ]
-    },
-    {
-      path: '/register',
-      component: Register
     }
   ]
 })
