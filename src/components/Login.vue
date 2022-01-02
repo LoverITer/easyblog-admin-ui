@@ -13,12 +13,12 @@
 
         <!--密码-->
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" type="password"></el-input>
+          <el-input v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" type="password" show-password></el-input>
         </el-form-item>
 
         <el-form-item class="btns">
           <el-button plain type="primary" @click="login">登录</el-button>
-          <el-button plain type="info">注册</el-button>
+          <el-button plain type="info" @click="register">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -82,6 +82,10 @@ export default {
           })
         }
       })
+    },
+    register: function () {
+      //点击注册跳转到注册页面
+      this.$router.push('/register')
     }
   }
 }
