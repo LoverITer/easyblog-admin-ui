@@ -11,5 +11,8 @@ name: "Footer"
 </script>
 
 <style scoped>
-
+p{
+  color: #999AAA;
+  font-size: 15px;
+}
 </style>

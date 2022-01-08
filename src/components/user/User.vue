@@ -42,7 +42,8 @@
             <!--修改按钮-->
             <el-button size="mini" type="primary" icon="el-icon-edit" @click="showEditDialog(scope.row)"></el-button>
             <!--删除按钮-->
-            <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteUserById(scope.row.id)"></el-button>
+            <el-button size="mini" type="danger" icon="el-icon-delete"
+                       @click="deleteUserById(scope.row.id)"></el-button>
             <!--分配角色按钮-->
             <el-tooltip :enterable="false" effect="dark" placement="top" content="分配角色">
               <el-button size="mini" type="warning" icon="el-icon-setting"></el-button>
@@ -88,7 +89,7 @@
     </el-dialog>
 
     <!--修改用户对话框-->
-    <el-dialog title="修改用户信息" :visible.sync="editDialogVisible" @close="initDialog">
+    <el-dialog title="修改用户信息" :visible.sync="editDialogVisible">
       <!--对话框内容主体-->
       <el-form ref="userEditFormRef" :model="editUserForm" :rules="editUserFormRules" label-width="70px">
         <el-form-item label="用户名" prop="username">
@@ -267,7 +268,6 @@ export default {
     //处理对话框关闭时初始化对话框
     initDialog () {
       this.$refs.userAddFormRef.resetFields()
-      this.$refs.userEditFormRef.resetFields()
     },
     //添加用户
     addUser () {
