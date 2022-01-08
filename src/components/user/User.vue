@@ -33,7 +33,7 @@
             作用域插槽：slot-scope 可以获取到本行的数据
           -->
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.mg_state" @change="saveStatus(scope.row)"></el-switch>
+            <el-switch v-model="scope.row.mg_state" @change="saveUserStatus(scope.row)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="创建时间" prop="create_time"></el-table-column>
@@ -46,15 +46,16 @@
                        @click="deleteUserById(scope.row.id)"></el-button>
             <!--分配角色按钮-->
             <el-tooltip :enterable="false" effect="dark" placement="top" content="分配角色">
-              <el-button size="mini" type="warning" icon="el-icon-setting"></el-button>
+              <el-button size="mini" type="warning" icon="el-icon-setting"
+                         @click="showEditRoleDialog(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
 
       <!--分页-->
-      <el-pagination @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange"
+      <el-pagination @size-change="pageSizeChangeRefresh"
+                     @current-change="currentPageChangeRefresh"
                      :current-page="userInfoQueryParam.pagenum"
                      :page-sizes="[1, 2, 3, 5]"
                      :page-size="userInfoQueryParam.pagesize"
@@ -110,6 +111,32 @@
       </span>
     </el-dialog>
 
+    <!--分配角色弹窗-->
+    <el-dialog title="修改角色信息" :visible.sync="editRoleDialogVisible">
+      <el-form ref="userRoleEditFormRef" :model="editRoleForm" label-width="70px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="editRoleForm.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="当前角色" prop="role_name">
+          <el-input v-model="editRoleForm.role_name" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="选择角色">
+          <el-select :disabled="editRoleForm.username==='admin'" class="role-select"
+                     v-model="selectedRoleId" placeholder="请选择">
+            <el-option v-for="item in roleList"
+                       :key="item.id"
+                       :label="item.roleName"
+                       :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <!--底部按钮-->
+      <span slot="footer" class="dialog-foot">
+        <el-button type="primary" @click="editRole">确定</el-button>
+         <el-button @click="editRoleDialogVisible=false">取消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -142,9 +169,11 @@ export default {
         pagesize: 5  //分页大小
       },
       userList: [],   //用户列表数据
+      roleList: [],    //用户角色数据
       total: 0,          //用户列表总大小
       addDialogVisible: false,   //对话框是否显示，默认不显示
       editDialogVisible: false,
+      editRoleDialogVisible: false,
       addUserForm: {
         username: '',
         password: '',
@@ -156,6 +185,11 @@ export default {
         username: '',
         email: '',
         mobile: ''
+      },
+      editRoleForm: {
+        id: '',
+        username: '',
+        role_name: ''
       },
       addUserFormRules: {
         username: [
@@ -224,7 +258,8 @@ export default {
             trigger: 'blur'
           }
         ]
-      }
+      },
+      selectedRoleId: ''
     }
   },
   methods: {
@@ -243,19 +278,19 @@ export default {
       })
     },
     //处理选择分页大小动作
-    handleSizeChange (newSize) {
+    pageSizeChangeRefresh (newSize) {
       //给pagesize赋值
       this.userInfoQueryParam.pagesize = newSize
       //再次请求数据
       this.getUserList()
     },
     //处理翻页动作
-    handleCurrentChange (newPage) {
+    currentPageChangeRefresh (newPage) {
       this.userInfoQueryParam.pagenum = newPage
       this.getUserList()
     },
     //保存用户状态的改变
-    saveStatus (user) {
+    saveUserStatus (user) {
       this.$http.put(`users/${user.id}/state/${user.mg_state}`).then(response => {
         const resp = response.data
         if (resp.meta.status !== 200) {
@@ -290,8 +325,8 @@ export default {
     },
     //修改用户对话框
     showEditDialog (user) {
-      this.editDialogVisible = true
       this.editUserForm = user
+      this.editDialogVisible = true
     },
     //提交用户修改信息,参数是原本的信息
     editUser () {
@@ -333,6 +368,42 @@ export default {
         //捕捉messageBox点击取消后的异常，可以再此进行取消后的操作
         this.$message.info('已取消删除')
       })
+    },
+    //显示修角色对话框
+    showEditRoleDialog (user) {
+      //显示用户角色编辑窗口
+      this.editRoleForm = user
+      this.selectedRoleId = user.role_name
+      this.$http.get('roles').then(response => {
+        let resp = response.data
+        if (resp.meta.status !== 200) {
+          return this.$message.error('获取用户角色数据失败')
+        }
+        this.roleList = resp.data
+        this.editRoleDialogVisible = true
+      })
+    },
+    //编辑角色
+    editRole () {
+      if (this.selectedRoleId === this.editRoleForm.role_name) {
+        return this.$message.error('请选择角色')
+      }
+      this.$http.put(`users/${this.editRoleForm.id}/role`, {
+        rid: this.selectedRoleId
+      }).then(response => {
+        let resp = response.data
+        if (resp.meta.status !== 200) {
+          return this.$message.error('保存用户角色失败')
+        }
+        this.getUserList()
+        this.editRoleDialogVisible = false
+        this.$message.success('保存用户角色成功')
+        this.resetEditRoleDialog()
+      })
+    },
+    resetEditRoleDialog () {
+      this.selectedRoleId = ''
+      this.editRoleForm = ''
     }
   },
   created () {
@@ -342,5 +413,7 @@ export default {
 </script>
 
 <style scoped>
-
+.role-select {
+  width: 100% !important;
+}
 </style>
