@@ -26,3 +26,5 @@ html, body, #app {
 .el-dialog__header {
     text-align: left;
 }
+
+.el-cascader-menu {   height: 300px; }
