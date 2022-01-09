@@ -32,15 +32,15 @@
             <el-table-column type="expand">
               <template slot-scope="scope">
                 <el-tag v-for="(item,index) in scope.row.attr_vals"
-                        :key="index" closable>
+                        :key="index" closable @close="deleteParamsValueById(index,scope.row)">
                   {{ item }}
                 </el-tag>
                 <el-input size="small" class="input-new-tag"
                           ref="inputParamRef"
                           v-model="scope.row.inputParamValue"
                           v-if="scope.row.inputParamValueVisible"
-                          @keyup.enter.native="saveParamValue(scope.row)"
-                          @blur="saveParamValue(scope.row)"></el-input>
+                          @keyup.enter.native="refreshParamValue(scope.row)"
+                          @blur="refreshParamValue(scope.row)"></el-input>
                 <el-button size="small" class="input-new-tag" v-else @click="showParamValueInput(scope.row)">+ 添加新特性
                 </el-button>
               </template>
@@ -194,9 +194,13 @@ export default {
         if (resp.meta.status !== 200) {
           return this.$message.error('获取商品参数列表失败')
         }
+        console.log(resp)
         resp.data.forEach(item => {
           //item.attr_vals不为空时再分割
-          item.attr_vals = item.attr_vals ? item.attr_vals.split(',') : []
+          item.attr_vals = item.attr_vals ? item.attr_vals.split(',').filter(function (val) {
+            return val !== ''
+          }) : []
+
           //控制文本框的显示与隐藏
           item.inputParamValueVisible = false
           item.inputParamValue = ''
@@ -266,7 +270,6 @@ export default {
           attr_sel: this.activeTabName
         }).then(response => {
           let resp = response.data
-          console.log(resp)
           if (resp.meta.status !== 200) {
             return this.$message.error('保存修改失败！')
           }
@@ -297,9 +300,39 @@ export default {
         this.$message.info('取消了删除操作')
       })
     },
-    //保存参数value，在文本输入框失去焦点或者按下enter键之后会调用
-    saveParamValue (param) {
+    //在文本输入框失去焦点或者按下enter键之后会调用
+    refreshParamValue (param) {
       param.inputParamValueVisible = false
+      if (param.inputParamValue.trim().length === 0) {
+        param.inputParamValue = ''
+        return
+      }
+      //后续处理
+      param.attr_vals.push(param.inputParamValue.trim())
+      param.inputParamValue = ''
+      this.saveParamValue(param)
+    },
+    //保存参数项value
+    saveParamValue (param) {
+      this.$http.put(`categories/${this.getSelectedCategoryId}/attributes/${param.attr_id}`, {
+        attr_name: param.attr_name,
+        attr_sel: this.activeTabName,
+        attr_vals: param.attr_vals.join(',')
+      }).then(response => {
+        let resp = response.data
+        if (resp.meta.status !== 200) {
+          return this.$message.error('修改参数项失败!')
+        }
+        this.$message.success('修改参数项成功!')
+      })
+    },
+    //删除对应参数可选项
+    deleteParamsValueById (index, param) {
+      param.attr_vals.splice(index, 1)
+      param.attr_vals.filter(function (val) {
+        return val !== ''
+      })
+      this.saveParamValue(param)
     },
     resetAddDialog () {
       //重置表单
@@ -341,12 +374,12 @@ export default {
 
 .el-table__expanded-cell,
 .el-tag--light {
-  margin-left: 10px;
+  margin: 10px;
 }
 
 .input-new-tag {
-  margin-left: 10px;
-  width: 150px;
+  margin: 10px;
+  width: 100px;
 }
 
 .category-select {
