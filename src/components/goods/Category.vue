@@ -54,7 +54,7 @@
     </el-card>
 
     <!--添加分类对话框-->
-    <el-dialog title="添加分类" :visible.sync="categoryAddDialogVisible" width="50%">
+    <el-dialog title="添加分类" :visible.sync="categoryAddDialogVisible" width="50%" @close="resetCategoryAddDialog">
       <el-form ref="categoryAddFormRef" :model="categoryAddForm" :rules="categoryAddRules" label-width="100px">
         <el-form-item label="分类名称" prop="cat_name">
           <el-input v-model="categoryAddForm.cat_name"></el-input>
@@ -147,7 +147,7 @@ export default {
         label: 'cat_name',   //展示的值
         children: 'children'   //父子嵌套
       },
-      addCategorySelectedKeys:[] //选中的分类级父分类id
+      addCategorySelectedKeys: [] //级联选择器选中的分类级父分类id
     }
   },
   methods: {
@@ -196,6 +196,15 @@ export default {
     // 级联选择选中之后
     addCategorySelectedRefresh () {
       console.log(this.addCategorySelectedKeys)
+      if (this.addCategorySelectedKeys.length > 0) {
+        //选中了分类
+        this.categoryAddForm.cat_pid = this.addCategorySelectedKeys[this.addCategorySelectedKeys.length - 1]
+        this.categoryAddForm.cat_level = this.addCategorySelectedKeys.length
+      } else {
+        //重置父级分类和父级级别
+        this.categoryAddForm.cat_pid = 0
+        this.categoryAddForm.cat_level = 0
+      }
     },
     //显示编辑弹窗
     showCategoryEditDialog () {
@@ -205,9 +214,31 @@ export default {
     },
     //添加分类
     saveAddCategory () {
+      this.$refs.categoryAddFormRef.validate(valid => {
+        if (!valid) {
+          return this.$message.error('请检查输入')
+        }
+        this.$http.post('categories', this.categoryAddForm).then(response => {
+          let resp = response.data
+          if (resp.meta.status !== 201) {
+            return this.$message.error('新增分类失败！')
+          }
+          //重新加载分类列表
+          this.getCategories()
+          this.categoryAddDialogVisible = false
+          this.$message.success('新增分类成功！')
+        })
+      })
     },
     //删除商品分类
     deleteUserCategoryId (categoryId) {
+    },
+    resetCategoryAddDialog () {
+      //清空表单
+      this.$refs.categoryAddFormRef.resetFields()
+      this.addCategorySelectedKeys = []
+      this.categoryAddForm.cat_level = 0
+      this.categoryAddForm.cat_pid = 0
     }
   },
   created () {
@@ -224,6 +255,7 @@ export default {
 .zk-table {
   margin-top: 15px;
 }
+
 .el-icon-success {
   color: lightgreen !important;
 }
