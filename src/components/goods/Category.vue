@@ -48,7 +48,7 @@
                      :current-page="queryCategoriesRequest.pagenum"
                      :page-sizes="[5, 10, 50, 100]"
                      :page-size="queryCategoriesRequest.pagesize"
-                     layout="total, sizes, prev, pager, next, jumper"
+                      layout="total, sizes, prev, pager, next, jumper"
                      :total="categoriesTotal">
       </el-pagination>
     </el-card>
