@@ -32,9 +32,17 @@
             <el-table-column type="expand">
               <template slot-scope="scope">
                 <el-tag v-for="(item,index) in scope.row.attr_vals"
-                        :key="index"
-                        closable>{{ item }}
+                        :key="index" closable>
+                  {{ item }}
                 </el-tag>
+                <el-input size="small" class="input-new-tag"
+                          ref="inputParamRef"
+                          v-model="scope.row.inputParamValue"
+                          v-if="scope.row.inputParamValueVisible"
+                          @keyup.enter.native="saveParamValue(scope.row)"
+                          @blur="saveParamValue(scope.row)"></el-input>
+                <el-button size="small" class="input-new-tag" v-else @click="showParamValueInput(scope.row)">+ 添加新特性
+                </el-button>
               </template>
             </el-table-column>
             <el-table-column label="ID" prop="attr_id"></el-table-column>
@@ -168,6 +176,7 @@ export default {
     tabClickRefresh () {
       this.getCategoryParamsList()
     },
+    //获取参数列表
     getCategoryParamsList () {
       if (this.selectedKeys.length !== 3) {
         //不是三级分类
@@ -186,7 +195,11 @@ export default {
           return this.$message.error('获取商品参数列表失败')
         }
         resp.data.forEach(item => {
-          item.attr_vals = item.attr_vals.split(',')
+          //item.attr_vals不为空时再分割
+          item.attr_vals = item.attr_vals ? item.attr_vals.split(',') : []
+          //控制文本框的显示与隐藏
+          item.inputParamValueVisible = false
+          item.inputParamValue = ''
         })
         if (this.activeTabName === 'many') {
           this.dynamicTableParams = resp.data
@@ -207,6 +220,15 @@ export default {
       this.editParamsDialogVisible = true
       this.paramsEditForm.attr_name = param.attr_name
       this.paramsEditForm.attr_id = param.attr_id
+    },
+    showParamValueInput (param) {
+      param.inputParamValueVisible = true
+      //自动获得焦点
+      // $nextTick 方法会在当页面上元素被重新渲染后会执行回调方法
+      this.$nextTick(__ => {
+        //this.$refs.inputParamRef.$refs.input 可以获取到文本框的DOM对象
+        this.$refs.inputParamRef.$refs.input.focus()
+      })
     },
     //添加分类参数
     saveAddParams () {
@@ -275,6 +297,10 @@ export default {
         this.$message.info('取消了删除操作')
       })
     },
+    //保存参数value，在文本输入框失去焦点或者按下enter键之后会调用
+    saveParamValue (param) {
+      param.inputParamValueVisible = false
+    },
     resetAddDialog () {
       //重置表单
       this.$refs.paramsAddFormRef.resetFields()
@@ -312,10 +338,17 @@ export default {
 .el-card {
   text-align: left
 }
+
 .el-table__expanded-cell,
-.el-tag--light{
+.el-tag--light {
   margin-left: 10px;
 }
+
+.input-new-tag {
+  margin-left: 10px;
+  width: 150px;
+}
+
 .category-select {
   margin: 15px 0 15px 0;
 }
