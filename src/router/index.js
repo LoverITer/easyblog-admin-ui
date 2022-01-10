@@ -15,72 +15,17 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   routes: [
-    {
-      path: '/',
-      redirect: '/login'
-    },
-    {
-      path: '/login',
-      component: Login
-    },
-    {
-      path: '/register',
-      component: Register
-    },
-    {
-      path: '/home',
-      component: Home,
-      redirect: '/welcome',
-      children: [
-        {
-          path: '/welcome',
-          components: {
-            'default': Welcome,
-            'Footer': Footer
-          }
-        },
-        {
-          path: '/users',
-          components: {
-            'default': User,
-            'Footer': Footer
-          }
-        },
-        {
-          path: '/rights',
-          components: {
-            'default': Rights,
-            'Footer': Footer
-          }
-        },
-        {
-          path: '/roles',
-          components: {
-            'default': Roles,
-            'Footer': Footer
-          }
-        },
-        {
-          path:'/categories',
-          components:{
-            default: GoodsCategory,
-            'Footer': Footer
-          }
-        },
-        {
-          path:'/goods',
-          components:{
-            default: Goods,
-            'Footer': Footer
-          }
-        },
-        {
-          path:'/params',
-          components:{
-            default: CategoryConfigure,
-            'Footer': Footer
-          }
-        }
+    { path: '/', redirect: '/login' },
+    { path: '/login', component: Login },
+    { path: '/register', component: Register },
+    { path: '/home', component: Home, redirect: '/welcome', children: [
+        { path: '/welcome', components: { 'default': Welcome, 'Footer': Footer } },
+        { path: '/users', components: { 'default': User, 'Footer': Footer } },
+        { path: '/rights', components: { 'default': Rights, 'Footer': Footer } },
+        { path: '/roles', components: { 'default': Roles, 'Footer': Footer } },
+        { path:'/categories', components:{ default: GoodsCategory, 'Footer': Footer } },
+        { path:'/goods', components:{ default: Goods, 'Footer': Footer } },
+        { path:'/params', components:{ default: CategoryConfigure, 'Footer': Footer } }
       ]
     }
   ]
