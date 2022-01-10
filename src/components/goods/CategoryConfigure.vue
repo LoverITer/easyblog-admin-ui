@@ -329,9 +329,6 @@ export default {
     //删除对应参数可选项
     deleteParamsValueById (index, param) {
       param.attr_vals.splice(index, 1)
-      param.attr_vals.filter(function (val) {
-        return val !== ''
-      })
       this.saveParamValue(param)
     },
     resetAddDialog () {
@@ -346,7 +343,7 @@ export default {
     },
     //从级联选中数组中获取三级分类id
     getSelectedCategoryId () {
-      if (this.selectedKeys.length === 3) {
+      if (this.selectedKeys.length === 3){
         return this.selectedKeys[2]
       }
       return null
