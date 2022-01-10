@@ -5,7 +5,9 @@ import './plugins/element.js'
 import './assets/global.css'
 import './assets/fonts/iconfont.css'
 import axios from 'axios'
+import ZkTable  from 'vue-table-with-tree-grid'
 
+Vue.use(ZkTable)
 Vue.config.productionTip = false
 // 将axios挂载到vue实例上
 Vue.prototype.$http = axios
