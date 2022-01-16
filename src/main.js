@@ -5,8 +5,19 @@ import './plugins/element.js'
 import './assets/global.css'
 import './assets/fonts/iconfont.css'
 import axios from 'axios'
+//导入树形表格
 import ZkTable from 'vue-table-with-tree-grid'
+//导入富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
 
+//导入富文本样式
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
+
+
+//注册富文本编辑器为全局组件
+Vue.use(VueQuillEditor)
 Vue.use(ZkTable)
 Vue.config.productionTip = false
 // 将axios挂载到vue实例上
@@ -19,16 +30,16 @@ axios.interceptors.request.use(config => {
   //最后需要返回此config
   return config
 })
-//日期过滤器：yyyy-MM-dd hh:mm:ss
+//注册全局日期过滤器：yyyy-MM-dd hh:mm:ss
 Vue.filter('simpleDateFormat', function (timestamp) {
   if (timestamp != null) {
     const date = new Date(timestamp)
-    const year= date.getFullYear();
-    const mon = (date.getMonth()+1+'').padStart(2,'0')
-    const day = (date.getMonth()+1+'').padStart(2,'0')
-    const hour = (date.getMonth()+1+'').padStart(2,'0')
-    const min = (date.getMonth()+1+'').padStart(2,'0')
-    const sec = (date.getMonth()+1+'').padStart(2,'0')
+    const year = date.getFullYear()
+    const mon = (date.getMonth() + 1 + '').padStart(2, '0')
+    const day = (date.getMonth() + 1 + '').padStart(2, '0')
+    const hour = (date.getMonth() + 1 + '').padStart(2, '0')
+    const min = (date.getMonth() + 1 + '').padStart(2, '0')
+    const sec = (date.getMonth() + 1 + '').padStart(2, '0')
 
     return `${year}-${mon}-${day} ${hour}:${min}:${sec}`
   }

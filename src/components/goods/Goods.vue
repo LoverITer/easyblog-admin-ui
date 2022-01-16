@@ -10,19 +10,19 @@
     <el-card>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-input placeholder="输入查询内容">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="输入查询内容" clearable v-model="queryGoodsRequest.query" @keypress.enter.native="getGoodsList" @clear="getGoodsList">
+            <el-button slot="append" icon="el-icon-search" @click="getGoodsList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="3">
-          <el-button type="primary">添加商品</el-button>
+          <el-button type="primary" @click="showAddGoodsDialog">添加商品</el-button>
         </el-col>
       </el-row>
 
       <!--table表格区域-->
       <el-table :data="goodsList" border stripe>
-        <el-table-column fixed="left" label="ID" prop="goods_id" :width="50"></el-table-column>
-        <el-table-column fixed="left" label="商品名称" prop="goods_name" :width="350"></el-table-column>
+        <el-table-column label="ID" prop="goods_id" :width="50"></el-table-column>
+        <el-table-column label="商品名称" prop="goods_name" :width="700"></el-table-column>
         <el-table-column label="商品价格(元)" prop="goods_price" :width="110"></el-table-column>
         <el-table-column label="商品数量" prop="goods_number"></el-table-column>
         <el-table-column label="商品重量" prop="goods_weight"></el-table-column>
@@ -40,14 +40,14 @@
           </template>
         </el-table-column>
         <el-table-column label="热销品数量" prop="hot_mumber" :width="100"></el-table-column>
-        <el-table-column label="创建时间" prop="add_time"  :width="200">
+        <el-table-column label="创建时间" prop="add_time" :width="200">
           <template slot-scope="scope">
-            {{scope.row.add_time | simpleDateFormat}}
+            {{ scope.row.add_time | simpleDateFormat }}
           </template>
         </el-table-column>
         <el-table-column label="更新时间" prop="upd_time" :width="200">
           <template slot-scope="scope">
-            {{scope.row.upd_time | simpleDateFormat}}
+            {{ scope.row.upd_time | simpleDateFormat }}
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" :width="185">
@@ -109,6 +109,10 @@ export default {
     currentPageChangeRefresh (newPage) {
       this.queryGoodsRequest.pagenum = newPage
       this.getGoodsList()
+    },
+    //展示添加商品对话框
+    showAddGoodsDialog () {
+      this.$router.push('/goods/add')
     }
   },
   created () {

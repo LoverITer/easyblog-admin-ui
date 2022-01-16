@@ -11,6 +11,8 @@ import Roles from '../components/power/Roles'
 import GoodsCategory from '../components/goods/Category'
 import Goods from '../components/goods/Goods'
 import CategoryConfigure from '../components/goods/CategoryConfigure'
+import GoodsAdder from '../components/goods/GoodsAdder'
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -25,7 +27,8 @@ const router = new VueRouter({
         { path: '/roles', components: { 'default': Roles, 'Footer': Footer } },
         { path:'/categories', components:{ default: GoodsCategory, 'Footer': Footer } },
         { path:'/goods', components:{ default: Goods, 'Footer': Footer } },
-        { path:'/params', components:{ default: CategoryConfigure, 'Footer': Footer } }
+        { path:'/params', components:{ default: CategoryConfigure, 'Footer': Footer } },
+        { path:'/goods/add', components:{ default: GoodsAdder, 'Footer': Footer }}
       ]
     }
   ]
