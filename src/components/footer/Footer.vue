@@ -14,5 +14,6 @@ name: "Footer"
 p{
   color: #999AAA;
   font-size: 15px;
+  text-align: center;
 }
 </style>
