@@ -30,7 +30,19 @@ import {
   Select,
   Option,
   Cascader,
-  Alert, Tabs, TabPane, Steps, Step, Checkbox, CheckboxGroup, Upload
+  Alert,
+  Tabs,
+  TabPane,
+  Steps,
+  Step,
+  Checkbox,
+  CheckboxGroup,
+  Upload,
+  Drawer,
+  Descriptions,
+  DescriptionsItem,
+  Timeline,
+  TimelineItem
 } from 'element-ui'
 
 Vue.use(Button)
@@ -69,6 +81,11 @@ Vue.use(Step)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(Upload)
+Vue.use(Drawer)
+Vue.use(Descriptions)
+Vue.use(DescriptionsItem)
+Vue.use(Timeline)
+Vue.use(TimelineItem)
 //挂载 element-ui 的message 组件到 vue 实例
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
