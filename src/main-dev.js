@@ -24,8 +24,6 @@ Vue.use(ZkTable)
 Vue.config.productionTip = false
 // 将axios挂载到vue实例上
 Vue.prototype.$http = axios
-//挂载echarts
-Vue.prototype.$echarts = echarts
 // 配置请求的根路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
 //axios请求拦截器，对请求进行预处理：1、添加token
