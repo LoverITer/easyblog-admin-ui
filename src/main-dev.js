@@ -15,7 +15,8 @@ import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
 import * as echarts from 'echarts'
-
+import NProgress from 'nprogress/nprogress'   //官方地址：https://github.com/rstacruz/nprogress
+import 'nprogress/nprogress.css'
 
 //注册富文本编辑器为全局组件
 Vue.use(VueQuillEditor)
@@ -29,9 +30,14 @@ Vue.prototype.$echarts = echarts
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
 //axios请求拦截器，对请求进行预处理：1、添加token
 axios.interceptors.request.use(config => {
+  NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem('LOGIN_TOKEN')
   //最后需要返回此config
   return config
+})
+axios.interceptors.response.use(config=>{
+  NProgress.done()
+  return config;
 })
 //注册全局日期过滤器：yyyy-MM-dd hh:mm:ss
 Vue.filter('simpleDateFormat', function (timestamp) {
