@@ -12,6 +12,8 @@ import GoodsCategory from '../components/goods/Category'
 import Goods from '../components/goods/Goods'
 import CategoryConfigure from '../components/goods/CategoryConfigure'
 import GoodsAdder from '../components/goods/GoodsAdder'
+import Orders from '../components/order/Orders'
+import Report from '../components/chart/Report'
 
 Vue.use(VueRouter)
 
@@ -28,7 +30,9 @@ const router = new VueRouter({
         { path:'/categories', components:{ default: GoodsCategory, 'Footer': Footer } },
         { path:'/goods', components:{ default: Goods, 'Footer': Footer } },
         { path:'/params', components:{ default: CategoryConfigure, 'Footer': Footer } },
-        { path:'/goods/add', components:{ default: GoodsAdder, 'Footer': Footer }}
+        { path:'/goods/add', components:{ default: GoodsAdder, 'Footer': Footer }},
+        { path:'/orders', components:{ default: Orders, 'Footer': Footer }},
+        { path:'/reports', components:{ default: Report, 'Footer': Footer }}
       ]
     }
   ]
